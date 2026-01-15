@@ -12,7 +12,7 @@ import {
   useInteractiveState,
 } from "./demo/index";
 
-const SIMULATION_PROMPT = "Create a contact form with name, email, and message";
+const SIMULATION_PROMPT = "创建一个包含姓名、邮箱和留言的联系表单";
 
 interface SimulationStage {
   tree: UITree;
@@ -27,7 +27,7 @@ const SIMULATION_STAGES: SimulationStage[] = [
         card: {
           key: "card",
           type: "Card",
-          props: { title: "Contact Us", maxWidth: "md" },
+          props: { title: "联系我们", maxWidth: "md" },
           children: [],
         },
       },
@@ -41,13 +41,13 @@ const SIMULATION_STAGES: SimulationStage[] = [
         card: {
           key: "card",
           type: "Card",
-          props: { title: "Contact Us", maxWidth: "md" },
+          props: { title: "联系我们", maxWidth: "md" },
           children: ["name"],
         },
         name: {
           key: "name",
           type: "Input",
-          props: { label: "Name", name: "name" },
+          props: { label: "姓名", name: "name" },
         },
       },
     },
@@ -61,18 +61,18 @@ const SIMULATION_STAGES: SimulationStage[] = [
         card: {
           key: "card",
           type: "Card",
-          props: { title: "Contact Us", maxWidth: "md" },
+          props: { title: "联系我们", maxWidth: "md" },
           children: ["name", "email"],
         },
         name: {
           key: "name",
           type: "Input",
-          props: { label: "Name", name: "name" },
+          props: { label: "姓名", name: "name" },
         },
         email: {
           key: "email",
           type: "Input",
-          props: { label: "Email", name: "email" },
+          props: { label: "邮箱", name: "email" },
         },
       },
     },
@@ -86,23 +86,23 @@ const SIMULATION_STAGES: SimulationStage[] = [
         card: {
           key: "card",
           type: "Card",
-          props: { title: "Contact Us", maxWidth: "md" },
+          props: { title: "联系我们", maxWidth: "md" },
           children: ["name", "email", "message"],
         },
         name: {
           key: "name",
           type: "Input",
-          props: { label: "Name", name: "name" },
+          props: { label: "姓名", name: "name" },
         },
         email: {
           key: "email",
           type: "Input",
-          props: { label: "Email", name: "email" },
+          props: { label: "邮箱", name: "email" },
         },
         message: {
           key: "message",
           type: "Textarea",
-          props: { label: "Message", name: "message" },
+          props: { label: "留言", name: "message" },
         },
       },
     },
@@ -116,28 +116,28 @@ const SIMULATION_STAGES: SimulationStage[] = [
         card: {
           key: "card",
           type: "Card",
-          props: { title: "Contact Us", maxWidth: "md" },
+          props: { title: "联系我们", maxWidth: "md" },
           children: ["name", "email", "message", "submit"],
         },
         name: {
           key: "name",
           type: "Input",
-          props: { label: "Name", name: "name" },
+          props: { label: "姓名", name: "name" },
         },
         email: {
           key: "email",
           type: "Input",
-          props: { label: "Email", name: "email" },
+          props: { label: "邮箱", name: "email" },
         },
         message: {
           key: "message",
           type: "Textarea",
-          props: { label: "Message", name: "message" },
+          props: { label: "留言", name: "message" },
         },
         submit: {
           key: "submit",
           type: "Button",
-          props: { label: "Send Message", variant: "primary" },
+          props: { label: "发送消息", variant: "primary" },
         },
       },
     },
@@ -298,7 +298,7 @@ export function Demo() {
 
   const jsonCode = currentTree
     ? JSON.stringify(currentTree, null, 2)
-    : "// waiting...";
+    : "// 等待中...";
 
   const isTypingSimulation = mode === "simulation" && phase === "typing";
   const isStreamingSimulation = mode === "simulation" && phase === "streaming";
@@ -343,7 +343,7 @@ export function Demo() {
                 type="text"
                 value={userPrompt}
                 onChange={(e) => setUserPrompt(e.target.value)}
-                placeholder="Describe what you want to build..."
+                placeholder="描述您想要构建的内容..."
                 className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground/50 text-base"
                 disabled={isStreaming}
                 maxLength={140}
@@ -396,8 +396,8 @@ export function Demo() {
           )}
         </div>
         <div className="mt-2 text-xs text-muted-foreground text-center">
-          Try: &quot;Create a login form&quot; or &quot;Build a feedback form
-          with rating&quot;
+          试试: &quot;创建一个登录表单&quot; 或
+          &quot;构建一个带评分的反馈表单&quot;
         </div>
       </div>
 
@@ -434,7 +434,7 @@ export function Demo() {
                 </>
               ) : (
                 <div className="text-muted-foreground/50">
-                  {showLoadingDots ? "streaming..." : "waiting..."}
+                  {showLoadingDots ? "流式传输中..." : "等待中..."}
                 </div>
               )}
             </div>
@@ -450,9 +450,7 @@ export function Demo() {
         {/* Rendered output using json-render */}
         <div>
           <div className="flex items-center justify-between mb-2 h-6">
-            <div className="text-xs text-muted-foreground font-mono">
-              render
-            </div>
+            <div className="text-xs text-muted-foreground font-mono">渲染</div>
             <button
               onClick={() => setIsFullscreen(true)}
               className="text-muted-foreground hover:text-foreground transition-colors"
@@ -501,7 +499,7 @@ export function Demo() {
               </div>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground/50 text-sm">
-                {isStreaming ? "generating..." : "waiting..."}
+                {isStreaming ? "生成中..." : "等待中..."}
               </div>
             )}
           </div>
@@ -513,7 +511,7 @@ export function Demo() {
       {isFullscreen && (
         <div className="fixed inset-0 z-50 bg-background flex flex-col">
           <div className="flex items-center justify-between px-6 h-14 border-b border-border">
-            <div className="text-sm font-mono">render</div>
+            <div className="text-sm font-mono">渲染</div>
             <button
               onClick={() => setIsFullscreen(false)}
               className="text-muted-foreground hover:text-foreground transition-colors p-1"
@@ -560,7 +558,7 @@ export function Demo() {
               </div>
             ) : (
               <div className="h-full flex items-center justify-center text-muted-foreground/50 text-sm">
-                {isStreaming ? "generating..." : "waiting..."}
+                {isStreaming ? "生成中..." : "等待中..."}
               </div>
             )}
           </div>

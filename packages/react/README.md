@@ -1,31 +1,31 @@
 # @json-render/react
 
-**Predictable. Guardrailed. Fast.** React renderer for user-prompted dashboards, widgets, apps, and data visualizations.
+**可预测。有边界。高性能。** 用于用户提示词驱动的仪表盘、小组件、应用和数据可视化的 React 渲染器。
 
-## Features
+## 功能特性
 
-- **Visibility Filtering**: Components automatically show/hide based on visibility conditions
-- **Action Handling**: Built-in action execution with confirmation dialogs
-- **Validation**: Field validation with error display
-- **Data Binding**: Two-way data binding between UI and data model
-- **Streaming**: Progressive rendering from streamed UI trees
+- **可见性过滤**: 组件根据可见性条件自动显示/隐藏
+- **操作处理**: 内置操作执行，带确认对话框
+- **验证**: 字段验证与错误显示
+- **数据绑定**: UI 与数据模型之间的双向数据绑定
+- **流式传输**: 从流式 UI 树渐进式渲染
 
-## Installation
+## 安装
 
 ```bash
 npm install @json-render/react @json-render/core
-# or
+# 或
 pnpm add @json-render/react @json-render/core
 ```
 
-## Quick Start
+## 快速开始
 
-### Basic Setup
+### 基本设置
 
 ```tsx
 import { JSONUIProvider, Renderer, useUIStream } from '@json-render/react';
 
-// Define your component registry
+// 定义您的组件注册表
 const registry = {
   Card: ({ element, children }) => (
     <div className="card">
@@ -40,7 +40,7 @@ const registry = {
   ),
 };
 
-// Action handlers
+// 操作处理器
 const actionHandlers = {
   submit: async (params) => {
     await api.submit(params);
@@ -58,12 +58,12 @@ function App() {
   return (
     <JSONUIProvider
       registry={registry}
-      initialData={{ user: { name: 'John' } }}
+      initialData={{ user: { name: '张三' } }}
       authState={{ isSignedIn: true }}
       actionHandlers={actionHandlers}
     >
       <input
-        placeholder="Describe the UI..."
+        placeholder="描述 UI..."
         onKeyDown={(e) => e.key === 'Enter' && send(e.target.value)}
       />
       <Renderer tree={tree} registry={registry} loading={isStreaming} />
@@ -72,7 +72,7 @@ function App() {
 }
 ```
 
-### Using Contexts Directly
+### 直接使用上下文
 
 ```tsx
 import {
@@ -86,11 +86,11 @@ import {
   useFieldValidation,
 } from '@json-render/react';
 
-// Data context
+// 数据上下文
 function MyComponent() {
   const { data, get, set } = useData();
   const value = get('/user/name');
-  
+
   return (
     <input
       value={value}
@@ -99,21 +99,21 @@ function MyComponent() {
   );
 }
 
-// Visibility context
+// 可见性上下文
 function ConditionalComponent({ visible }) {
   const { isVisible } = useVisibility();
-  
+
   if (!isVisible(visible)) {
     return null;
   }
-  
-  return <div>Visible content</div>;
+
+  return <div>可见内容</div>;
 }
 
-// Action context
+// 操作上下文
 function ActionButton({ action }) {
   const { execute, loadingActions } = useActions();
-  
+
   return (
     <button
       onClick={() => execute(action)}
@@ -124,11 +124,11 @@ function ActionButton({ action }) {
   );
 }
 
-// Validation context
+// 验证上下文
 function ValidatedInput({ path, checks }) {
   const { errors, validate, touch } = useFieldValidation(path, { checks });
   const [value, setValue] = useDataBinding(path);
-  
+
   return (
     <div>
       <input
@@ -142,92 +142,92 @@ function ValidatedInput({ path, checks }) {
 }
 ```
 
-### Streaming UI
+### 流式 UI
 
 ```tsx
 import { useUIStream } from '@json-render/react';
 
 function StreamingDemo() {
   const {
-    tree,        // Current UI tree
-    isStreaming, // Whether currently streaming
-    error,       // Error if any
-    send,        // Send a prompt
-    clear,       // Clear the tree
+    tree,        // 当前 UI 树
+    isStreaming, // 是否正在流式传输
+    error,       // 错误（如果有）
+    send,        // 发送提示词
+    clear,       // 清除树
   } = useUIStream({
     api: '/api/generate',
-    onComplete: (tree) => console.log('Done:', tree),
-    onError: (err) => console.error('Error:', err),
+    onComplete: (tree) => console.log('完成:', tree),
+    onError: (err) => console.error('错误:', err),
   });
 
   return (
     <div>
-      <button onClick={() => send('Create a dashboard')}>
-        Generate
+      <button onClick={() => send('创建一个仪表盘')}>
+        生成
       </button>
-      {isStreaming && <span>Generating...</span>}
+      {isStreaming && <span>生成中...</span>}
       {tree && <Renderer tree={tree} registry={registry} />}
     </div>
   );
 }
 ```
 
-## API Reference
+## API 参考
 
 ### Providers
 
-- `JSONUIProvider` - Combined provider for all contexts
-- `DataProvider` - Data model context
-- `VisibilityProvider` - Visibility evaluation context
-- `ActionProvider` - Action execution context
-- `ValidationProvider` - Validation context
+- `JSONUIProvider` - 所有上下文的组合 provider
+- `DataProvider` - 数据模型上下文
+- `VisibilityProvider` - 可见性评估上下文
+- `ActionProvider` - 操作执行上下文
+- `ValidationProvider` - 验证上下文
 
 ### Hooks
 
-- `useData()` - Access data model
-- `useDataValue(path)` - Get a single value
-- `useDataBinding(path)` - Two-way binding like useState
-- `useVisibility()` - Access visibility evaluation
-- `useIsVisible(condition)` - Check if condition is visible
-- `useActions()` - Access action execution
-- `useAction(action)` - Execute a specific action
-- `useValidation()` - Access validation context
-- `useFieldValidation(path, config)` - Field-level validation
+- `useData()` - 访问数据模型
+- `useDataValue(path)` - 获取单个值
+- `useDataBinding(path)` - 类似 useState 的双向绑定
+- `useVisibility()` - 访问可见性评估
+- `useIsVisible(condition)` - 检查条件是否可见
+- `useActions()` - 访问操作执行
+- `useAction(action)` - 执行特定操作
+- `useValidation()` - 访问验证上下文
+- `useFieldValidation(path, config)` - 字段级验证
 
-### Components
+### 组件
 
-- `Renderer` - Render a UI tree
-- `ConfirmDialog` - Default confirmation dialog
+- `Renderer` - 渲染 UI 树
+- `ConfirmDialog` - 默认确认对话框
 
-### Utilities
+### 工具函数
 
-- `useUIStream(options)` - Hook for streaming UI generation
-- `flatToTree(elements)` - Convert flat list to tree
+- `useUIStream(options)` - 流式 UI 生成的 hook
+- `flatToTree(elements)` - 将扁平列表转换为树
 
-## Component Props
+## 组件属性
 
-Components in your registry receive these props:
+注册表中的组件接收以下属性：
 
 ```typescript
 interface ComponentRenderProps<P = Record<string, unknown>> {
-  element: UIElement<string, P>;  // The element definition
-  children?: ReactNode;           // Rendered children
-  onAction?: (action: Action) => void;  // Action callback
-  loading?: boolean;              // Streaming in progress
+  element: UIElement<string, P>;  // 元素定义
+  children?: ReactNode;           // 已渲染的子元素
+  onAction?: (action: Action) => void;  // 操作回调
+  loading?: boolean;              // 流式传输进行中
 }
 ```
 
-## Example Component
+## 示例组件
 
 ```tsx
 function MetricComponent({ element }: ComponentRenderProps) {
   const { label, valuePath, format } = element.props;
   const value = useDataValue(valuePath);
-  
+
   const formatted = format === 'currency'
-    ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value)
+    ? new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(value)
     : String(value);
-  
+
   return (
     <div className="metric">
       <span className="label">{label}</span>

@@ -1,33 +1,33 @@
 # @json-render/core
 
-**Predictable. Guardrailed. Fast.** Core library for safe, user-prompted UI generation.
+**可预测。有边界。高性能。** 用于安全、用户提示词驱动的 UI 生成的核心库。
 
-## Features
+## 功能特性
 
-- **Conditional Visibility**: Show/hide components based on data paths, auth state, or complex logic expressions
-- **Rich Actions**: Actions with typed parameters, confirmation dialogs, and success/error callbacks
-- **Enhanced Validation**: Built-in validation functions with custom catalog functions support
-- **Type-Safe Catalog**: Define component schemas using Zod for full type safety
-- **Framework Agnostic**: Core logic is independent of UI frameworks
+- **条件可见性**: 基于数据路径、认证状态或复杂逻辑表达式显示/隐藏组件
+- **丰富的操作**: 带类型参数、确认对话框和成功/错误回调的操作
+- **增强验证**: 内置验证函数，支持自定义目录函数
+- **类型安全的目录**: 使用 Zod 定义组件 schema，实现完整的类型安全
+- **框架无关**: 核心逻辑独立于 UI 框架
 
-## Installation
+## 安装
 
 ```bash
 npm install @json-render/core
-# or
+# 或
 pnpm add @json-render/core
 ```
 
-## Quick Start
+## 快速开始
 
-### Create a Catalog
+### 创建目录
 
 ```typescript
 import { createCatalog } from '@json-render/core';
 import { z } from 'zod';
 
 const catalog = createCatalog({
-  name: 'My Dashboard',
+  name: '我的仪表盘',
   components: {
     Card: {
       props: z.object({
@@ -35,21 +35,21 @@ const catalog = createCatalog({
         description: z.string().nullable(),
       }),
       hasChildren: true,
-      description: 'A card container',
+      description: '卡片容器',
     },
     Button: {
       props: z.object({
         label: z.string(),
         action: ActionSchema,
       }),
-      description: 'A clickable button',
+      description: '可点击的按钮',
     },
   },
   actions: {
-    submit: { description: 'Submit the form' },
-    export: { 
+    submit: { description: '提交表单' },
+    export: {
       params: z.object({ format: z.enum(['csv', 'pdf']) }),
-      description: 'Export data',
+      description: '导出数据',
     },
   },
   functions: {
@@ -58,32 +58,32 @@ const catalog = createCatalog({
 });
 ```
 
-### Visibility Conditions
+### 可见性条件
 
 ```typescript
 import { visibility, evaluateVisibility } from '@json-render/core';
 
-// Simple path-based visibility
+// 简单的基于路径的可见性
 const element1 = {
   key: 'error-banner',
   type: 'Alert',
-  props: { message: 'Error!' },
+  props: { message: '错误!' },
   visible: { path: '/form/hasError' },
 };
 
-// Auth-based visibility
+// 基于认证的可见性
 const element2 = {
   key: 'admin-panel',
   type: 'Card',
-  props: { title: 'Admin' },
+  props: { title: '管理员' },
   visible: { auth: 'signedIn' },
 };
 
-// Complex logic
+// 复杂逻辑
 const element3 = {
   key: 'notification',
   type: 'Alert',
-  props: { message: 'Warning' },
+  props: { message: '警告' },
   visible: {
     and: [
       { path: '/settings/notifications' },
@@ -93,13 +93,13 @@ const element3 = {
   },
 };
 
-// Evaluate visibility
+// 评估可见性
 const isVisible = evaluateVisibility(element1.visible, {
   dataModel: { form: { hasError: true } },
 });
 ```
 
-### Rich Actions
+### 丰富的操作
 
 ```typescript
 import { resolveAction, executeAction } from '@json-render/core';
@@ -111,28 +111,28 @@ const buttonAction = {
     amount: 100,
   },
   confirm: {
-    title: 'Confirm Refund',
-    message: 'Refund $100 to customer?',
+    title: '确认退款',
+    message: '向客户退款 $100？',
     variant: 'danger',
   },
   onSuccess: { navigate: '/payments' },
   onError: { set: { '/ui/error': '$error.message' } },
 };
 
-// Resolve dynamic values
+// 解析动态值
 const resolved = resolveAction(buttonAction, dataModel);
 ```
 
-### Validation
+### 验证
 
 ```typescript
 import { runValidation, check } from '@json-render/core';
 
 const config = {
   checks: [
-    check.required('Email is required'),
-    check.email('Invalid email'),
-    check.maxLength(100, 'Too long'),
+    check.required('邮箱为必填项'),
+    check.email('邮箱格式无效'),
+    check.maxLength(100, '太长了'),
   ],
   validateOn: 'blur',
 };
@@ -146,39 +146,39 @@ const result = runValidation(config, {
 // result.errors = []
 ```
 
-## API Reference
+## API 参考
 
-### Visibility
+### 可见性
 
-- `evaluateVisibility(condition, context)` - Evaluate a visibility condition
-- `evaluateLogicExpression(expr, context)` - Evaluate a logic expression
-- `visibility.*` - Helper functions for creating visibility conditions
+- `evaluateVisibility(condition, context)` - 评估可见性条件
+- `evaluateLogicExpression(expr, context)` - 评估逻辑表达式
+- `visibility.*` - 创建可见性条件的辅助函数
 
-### Actions
+### 操作
 
-- `resolveAction(action, dataModel)` - Resolve dynamic values in an action
-- `executeAction(context)` - Execute an action with callbacks
-- `interpolateString(template, dataModel)` - Interpolate `${path}` in strings
+- `resolveAction(action, dataModel)` - 解析操作中的动态值
+- `executeAction(context)` - 执行带回调的操作
+- `interpolateString(template, dataModel)` - 在字符串中插值 `${path}`
 
-### Validation
+### 验证
 
-- `runValidation(config, context)` - Run validation checks
-- `runValidationCheck(check, context)` - Run a single validation check
-- `builtInValidationFunctions` - Built-in validators (required, email, min, max, etc.)
-- `check.*` - Helper functions for creating validation checks
+- `runValidation(config, context)` - 运行验证检查
+- `runValidationCheck(check, context)` - 运行单个验证检查
+- `builtInValidationFunctions` - 内置验证器 (required, email, min, max 等)
+- `check.*` - 创建验证检查的辅助函数
 
-### Catalog
+### 目录
 
-- `createCatalog(config)` - Create a catalog with components, actions, and functions
-- `generateCatalogPrompt(catalog)` - Generate an AI prompt describing the catalog
+- `createCatalog(config)` - 创建包含组件、操作和函数的目录
+- `generateCatalogPrompt(catalog)` - 生成描述目录的 AI 提示词
 
-## Types
+## 类型
 
-See `src/types.ts` for full type definitions:
+完整类型定义请参见 `src/types.ts`：
 
-- `UIElement` - Base element structure
-- `UITree` - Flat tree structure
-- `VisibilityCondition` - Visibility condition types
-- `LogicExpression` - Logic expression types
-- `Action` - Rich action definition
-- `ValidationConfig` - Validation configuration
+- `UIElement` - 基础元素结构
+- `UITree` - 扁平树结构
+- `VisibilityCondition` - 可见性条件类型
+- `LogicExpression` - 逻辑表达式类型
+- `Action` - 丰富的操作定义
+- `ValidationConfig` - 验证配置

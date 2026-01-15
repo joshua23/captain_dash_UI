@@ -39,5 +39,9 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": "prettier --write"
+  },
+  "dependencies": {
+    "@openrouter/ai-sdk-provider": "^1.5.4",
+    "@supabase/supabase-js": "^2.90.1"
   }
 }

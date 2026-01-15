@@ -2,22 +2,22 @@ import Link from "next/link";
 import { Code } from "@/components/code";
 
 export const metadata = {
-  title: "Data Binding | json-render",
+  title: "数据绑定 | json-render",
 };
 
 export default function DataBindingPage() {
   return (
     <article>
-      <h1 className="text-3xl font-bold mb-4">Data Binding</h1>
+      <h1 className="text-3xl font-bold mb-4">数据绑定</h1>
       <p className="text-muted-foreground mb-8">
-        Connect UI components to your application data using JSON Pointer paths.
+        使用 JSON Pointer 路径将 UI 组件连接到您的应用程序数据。
       </p>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">JSON Pointer Paths</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">JSON Pointer 路径</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        json-render uses JSON Pointer (RFC 6901) for data paths:
+        json-render 使用 JSON Pointer (RFC 6901) 作为数据路径：
       </p>
-      <Code lang="json">{`// Given this data:
+      <Code lang="json">{`// 给定以下数据：
 {
   "user": {
     "name": "Alice",
@@ -29,14 +29,14 @@ export default function DataBindingPage() {
   }
 }
 
-// These paths access:
+// 这些路径访问：
 "/user/name"        -> "Alice"
 "/metrics/revenue"  -> 125000
 "/metrics/growth"   -> 0.15`}</Code>
 
       <h2 className="text-xl font-semibold mt-12 mb-4">DataProvider</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Wrap your app with DataProvider to enable data binding:
+        用 DataProvider 包装您的应用以启用数据绑定：
       </p>
       <Code lang="tsx">{`import { DataProvider } from '@json-render/react';
 
@@ -48,33 +48,33 @@ function App() {
 
   return (
     <DataProvider initialData={initialData}>
-      {/* Your UI */}
+      {/* 您的 UI */}
     </DataProvider>
   );
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Reading Data</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">读取数据</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Use <code className="text-foreground">useDataValue</code> for read-only
-        access:
+        使用 <code className="text-foreground">useDataValue</code>{" "}
+        进行只读访问：
       </p>
       <Code lang="tsx">{`import { useDataValue } from '@json-render/react';
 
 function UserGreeting() {
   const name = useDataValue('/user/name');
-  return <h1>Hello, {name}!</h1>;
+  return <h1>你好，{name}！</h1>;
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Two-Way Binding</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">双向绑定</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Use <code className="text-foreground">useDataBinding</code> for
-        read-write access:
+        使用 <code className="text-foreground">useDataBinding</code>{" "}
+        进行读写访问：
       </p>
       <Code lang="tsx">{`import { useDataBinding } from '@json-render/react';
 
 function EmailInput() {
   const [email, setEmail] = useDataBinding('/form/email');
-  
+
   return (
     <input
       type="email"
@@ -84,49 +84,47 @@ function EmailInput() {
   );
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        Using the Data Context
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">使用数据上下文</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Access the full data context for advanced use cases:
+        访问完整的数据上下文以用于高级用例：
       </p>
       <Code lang="tsx">{`import { useData } from '@json-render/react';
 
 function DataDebugger() {
   const { data, setData, getValue, setValue } = useData();
-  
-  // Read any path
+
+  // 读取任意路径
   const revenue = getValue('/metrics/revenue');
-  
-  // Write any path
+
+  // 写入任意路径
   const updateRevenue = () => setValue('/metrics/revenue', 150000);
-  
-  // Replace all data
+
+  // 替换所有数据
   const resetData = () => setData({ user: {}, form: {} });
-  
+
   return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">In JSON UI Trees</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">在 JSON UI 树中</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        AI can reference data paths in component props:
+        AI 可以在组件属性中引用数据路径：
       </p>
       <Code lang="json">{`{
   "type": "Metric",
   "props": {
-    "label": "Total Revenue",
+    "label": "总收入",
     "valuePath": "/metrics/revenue",
     "format": "currency"
   }
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Next</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">下一步</h2>
       <p className="text-sm text-muted-foreground">
-        Learn about{" "}
+        了解{" "}
         <Link href="/docs/actions" className="text-foreground hover:underline">
-          actions
+          操作
         </Link>{" "}
-        for user interactions.
+        以处理用户交互。
       </p>
     </article>
   );

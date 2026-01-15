@@ -16,7 +16,7 @@ export function Header() {
             href="/docs"
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            Docs
+            文档
           </Link>
           <a
             href="https://github.com/vercel-labs/json-render"

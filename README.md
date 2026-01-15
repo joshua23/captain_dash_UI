@@ -1,24 +1,24 @@
 # json-render
 
-**Predictable. Guardrailed. Fast.**
+**可预测。有边界。高性能。**
 
-Let end users generate dashboards, widgets, apps, and data visualizations from prompts — safely constrained to components you define.
+让终端用户通过提示词生成仪表盘、小组件、应用和数据可视化 — 安全地限制在您定义的组件范围内。
 
 ```bash
 npm install @json-render/core @json-render/react
 ```
 
-## Why json-render?
+## 为什么选择 json-render？
 
-When users prompt for UI, you need guarantees. json-render gives AI a **constrained vocabulary** so output is always predictable:
+当用户通过提示词生成 UI 时，您需要保障。json-render 给 AI 一个**受限的词汇表**，使输出始终可预测：
 
-- **Guardrailed** — AI can only use components in your catalog
-- **Predictable** — JSON output matches your schema, every time
-- **Fast** — Stream and render progressively as the model responds
+- **有边界** — AI 只能使用您目录中定义的组件
+- **可预测** — JSON 输出始终匹配您的 schema
+- **高性能** — 在模型响应时流式传输并渐进式渲染
 
-## Quick Start
+## 快速开始
 
-### 1. Define Your Catalog (what AI can use)
+### 1. 定义您的目录（AI 可使用的内容）
 
 ```typescript
 import { createCatalog } from '@json-render/core';
@@ -33,25 +33,25 @@ const catalog = createCatalog({
     Metric: {
       props: z.object({
         label: z.string(),
-        valuePath: z.string(),      // Binds to your data
+        valuePath: z.string(),      // 绑定到您的数据
         format: z.enum(['currency', 'percent', 'number']),
       }),
     },
     Button: {
       props: z.object({
         label: z.string(),
-        action: ActionSchema,        // AI declares intent, you handle it
+        action: ActionSchema,        // AI 声明意图，由您处理
       }),
     },
   },
   actions: {
-    export_report: { description: 'Export dashboard to PDF' },
-    refresh_data: { description: 'Refresh all metrics' },
+    export_report: { description: '将仪表盘导出为 PDF' },
+    refresh_data: { description: '刷新所有指标' },
   },
 });
 ```
 
-### 2. Register Your Components (how they render)
+### 2. 注册您的组件（如何渲染）
 
 ```tsx
 const registry = {
@@ -73,7 +73,7 @@ const registry = {
 };
 ```
 
-### 3. Let AI Generate
+### 3. 让 AI 生成
 
 ```tsx
 import { DataProvider, ActionProvider, Renderer, useUIStream } from '@json-render/react';
@@ -88,7 +88,7 @@ function Dashboard() {
         refresh_data: () => refetch(),
       }}>
         <input
-          placeholder="Create a revenue dashboard..."
+          placeholder="创建一个收入仪表盘..."
           onKeyDown={(e) => e.key === 'Enter' && send(e.target.value)}
         />
         <Renderer tree={tree} components={registry} />
@@ -98,20 +98,20 @@ function Dashboard() {
 }
 ```
 
-**That's it.** AI generates JSON, you render it safely.
+**就是这样。** AI 生成 JSON，您安全地渲染它。
 
 ---
 
-## Features
+## 功能特性
 
-### Conditional Visibility
+### 条件可见性
 
-Show/hide components based on data, auth, or complex logic:
+根据数据、认证状态或复杂逻辑显示/隐藏组件：
 
 ```json
 {
   "type": "Alert",
-  "props": { "message": "Error occurred" },
+  "props": { "message": "发生错误" },
   "visible": {
     "and": [
       { "path": "/form/hasError" },
@@ -128,15 +128,15 @@ Show/hide components based on data, auth, or complex logic:
 }
 ```
 
-### Rich Actions
+### 丰富的操作
 
-Actions with confirmation dialogs and callbacks:
+带确认对话框和回调的操作：
 
 ```json
 {
   "type": "Button",
   "props": {
-    "label": "Refund Payment",
+    "label": "退款",
     "action": {
       "name": "refund",
       "params": {
@@ -144,8 +144,8 @@ Actions with confirmation dialogs and callbacks:
         "amount": { "path": "/refund/amount" }
       },
       "confirm": {
-        "title": "Confirm Refund",
-        "message": "Refund ${/refund/amount} to customer?",
+        "title": "确认退款",
+        "message": "向客户退款 ${/refund/amount}？",
         "variant": "danger"
       },
       "onSuccess": { "set": { "/ui/success": true } },
@@ -155,17 +155,17 @@ Actions with confirmation dialogs and callbacks:
 }
 ```
 
-### Built-in Validation
+### 内置验证
 
 ```json
 {
   "type": "TextField",
   "props": {
-    "label": "Email",
+    "label": "邮箱",
     "valuePath": "/form/email",
     "checks": [
-      { "fn": "required", "message": "Email is required" },
-      { "fn": "email", "message": "Invalid email" }
+      { "fn": "required", "message": "邮箱为必填项" },
+      { "fn": "email", "message": "邮箱格式无效" }
     ],
     "validateOn": "blur"
   }
@@ -174,14 +174,14 @@ Actions with confirmation dialogs and callbacks:
 
 ---
 
-## Packages
+## 包
 
-| Package | Description |
+| 包 | 描述 |
 |---------|-------------|
-| `@json-render/core` | Types, schemas, visibility, actions, validation |
-| `@json-render/react` | React renderer, providers, hooks |
+| `@json-render/core` | 类型、schema、可见性、操作、验证 |
+| `@json-render/react` | React 渲染器、providers、hooks |
 
-## Demo
+## 演示
 
 ```bash
 git clone https://github.com/vercel-labs/json-render
@@ -190,10 +190,10 @@ pnpm install
 pnpm dev
 ```
 
-- http://localhost:3000 — Docs & Playground
-- http://localhost:3001 — Example Dashboard
+- http://localhost:3000 — 文档 & 演练场
+- http://localhost:3001 — 示例仪表盘
 
-## Project Structure
+## 项目结构
 
 ```
 json-render/
@@ -201,30 +201,30 @@ json-render/
 │   ├── core/        → @json-render/core
 │   └── react/       → @json-render/react
 ├── apps/
-│   └── web/         → Docs & Playground site
+│   └── web/         → 文档 & 演练场网站
 └── examples/
-    └── dashboard/   → Example dashboard app
+    └── dashboard/   → 示例仪表盘应用
 ```
 
-## How It Works
+## 工作原理
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│ User Prompt │────▶│  AI + Catalog│────▶│  JSON Tree  │
-│ "dashboard" │     │ (guardrailed)│     │(predictable)│
+│  用户提示词  │────▶│  AI + 目录   │────▶│  JSON 树    │
+│  "仪表盘"   │     │  (有边界的)  │     │ (可预测的)  │
 └─────────────┘     └──────────────┘     └─────────────┘
                                                │
                     ┌──────────────┐            │
-                    │  Your React  │◀───────────┘
-                    │  Components  │ (streamed)
+                    │   您的 React │◀───────────┘
+                    │     组件     │ (流式传输)
                     └──────────────┘
 ```
 
-1. **Define the guardrails** — what components, actions, and data bindings AI can use
-2. **Users prompt** — end users describe what they want in natural language
-3. **AI generates JSON** — output is always predictable, constrained to your catalog
-4. **Render fast** — stream and render progressively as the model responds
+1. **定义边界** — AI 可以使用哪些组件、操作和数据绑定
+2. **用户提示** — 终端用户用自然语言描述他们想要什么
+3. **AI 生成 JSON** — 输出始终可预测，受限于您的目录
+4. **快速渲染** — 在模型响应时流式传输并渐进式渲染
 
-## License
+## 许可证
 
 Apache-2.0

@@ -1,4 +1,5 @@
 import { streamText } from "ai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 
 export const maxDuration = 30;
 
@@ -84,8 +85,12 @@ export async function POST(req: Request) {
 
   const sanitizedPrompt = String(prompt || "").slice(0, MAX_PROMPT_LENGTH);
 
+  const openrouter = createOpenRouter({
+    apiKey: process.env.OPENROUTER_API_KEY,
+  });
+
   const result = streamText({
-    model: "anthropic/claude-opus-4.5",
+    model: openrouter("openai/gpt-4o"),
     system: SYSTEM_PROMPT,
     prompt: sanitizedPrompt,
     temperature: 0.7,

@@ -2,22 +2,20 @@ import Link from "next/link";
 import { Code } from "@/components/code";
 
 export const metadata = {
-  title: "Quick Start | json-render",
+  title: "快速开始 | json-render",
 };
 
 export default function QuickStartPage() {
   return (
     <article>
-      <h1 className="text-3xl font-bold mb-4">Quick Start</h1>
+      <h1 className="text-3xl font-bold mb-4">快速开始</h1>
       <p className="text-muted-foreground mb-8">
-        Get up and running with json-render in 5 minutes.
+        5 分钟内启动并运行 json-render。
       </p>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        1. Define your catalog
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">1. 定义您的目录</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Create a catalog that defines what components AI can use:
+        创建一个目录来定义 AI 可以使用哪些组件：
       </p>
       <Code lang="typescript">{`// lib/catalog.ts
 import { createCatalog } from '@json-render/core';
@@ -54,11 +52,9 @@ export const catalog = createCatalog({
   },
 });`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        2. Create your components
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">2. 创建您的组件</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Register React components that render each catalog type:
+        注册用于渲染每种目录类型的 React 组件：
       </p>
       <Code lang="tsx">{`// components/registry.tsx
 export const registry = {
@@ -84,11 +80,9 @@ export const registry = {
   ),
 };`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        3. Create an API route
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">3. 创建 API 路由</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Set up a streaming API route for AI generation:
+        设置用于 AI 生成的流式 API 路由：
       </p>
       <Code lang="typescript">{`// app/api/generate/route.ts
 import { streamText } from 'ai';
@@ -110,9 +104,9 @@ export async function POST(req: Request) {
   });
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">4. Render the UI</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">4. 渲染 UI</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Use the providers and renderer to display AI-generated UI:
+        使用 providers 和渲染器来显示 AI 生成的 UI：
       </p>
       <Code lang="tsx">{`// app/page.tsx
 'use client';
@@ -135,17 +129,17 @@ export default function Page() {
     <DataProvider initialData={{}}>
       <VisibilityProvider>
         <ActionProvider handlers={{
-          submit: (params) => console.log('Submit:', params),
-          navigate: (params) => console.log('Navigate:', params),
+          submit: (params) => console.log('提交:', params),
+          navigate: (params) => console.log('导航:', params),
         }}>
           <form onSubmit={handleSubmit}>
             <input
               name="prompt"
-              placeholder="Describe what you want..."
+              placeholder="描述您想要什么..."
               className="border p-2 rounded"
             />
             <button type="submit" disabled={isLoading}>
-              Generate
+              生成
             </button>
           </form>
 
@@ -158,45 +152,44 @@ export default function Page() {
   );
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Next steps</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">下一步</h2>
       <ul className="list-disc list-inside text-sm text-muted-foreground space-y-2">
         <li>
-          Learn about{" "}
+          深入了解{" "}
           <Link
             href="/docs/catalog"
             className="text-foreground hover:underline"
           >
-            catalogs
-          </Link>{" "}
-          in depth
+            目录
+          </Link>
         </li>
         <li>
-          Explore{" "}
+          探索{" "}
           <Link
             href="/docs/data-binding"
             className="text-foreground hover:underline"
           >
-            data binding
+            数据绑定
           </Link>{" "}
-          for dynamic values
+          以获取动态值
         </li>
         <li>
-          Add{" "}
+          添加{" "}
           <Link
             href="/docs/actions"
             className="text-foreground hover:underline"
           >
-            actions
+            操作
           </Link>{" "}
-          for interactivity
+          以实现交互性
         </li>
         <li>
-          Implement{" "}
+          实现{" "}
           <Link
             href="/docs/visibility"
             className="text-foreground hover:underline"
           >
-            conditional visibility
+            条件可见性
           </Link>
         </li>
       </ul>

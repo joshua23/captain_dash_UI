@@ -9,13 +9,11 @@ export default function CoreApiPage() {
     <article>
       <h1 className="text-3xl font-bold mb-4">@json-render/core</h1>
       <p className="text-muted-foreground mb-8">
-        Core types, schemas, and utilities.
+        核心类型、schema 和工具函数。
       </p>
 
       <h2 className="text-xl font-semibold mt-12 mb-4">createCatalog</h2>
-      <p className="text-sm text-muted-foreground mb-4">
-        Creates a catalog definition.
-      </p>
+      <p className="text-sm text-muted-foreground mb-4">创建目录定义。</p>
       <Code lang="typescript">{`function createCatalog(config: CatalogConfig): Catalog
 
 interface CatalogConfig {
@@ -39,13 +37,13 @@ interface ActionDefinition {
         generateCatalogPrompt
       </h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Generates a system prompt for AI models.
+        为 AI 模型生成系统提示词。
       </p>
       <Code lang="typescript">{`function generateCatalogPrompt(catalog: Catalog): string`}</Code>
 
       <h2 className="text-xl font-semibold mt-12 mb-4">evaluateVisibility</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Evaluates a visibility condition against data and auth state.
+        根据数据和认证状态评估可见性条件。
       </p>
       <Code lang="typescript">{`function evaluateVisibility(
   condition: VisibilityCondition | undefined,
@@ -65,7 +63,7 @@ type VisibilityCondition =
   | { lt: [DynamicValue, DynamicValue] }
   | { lte: [DynamicValue, DynamicValue] };`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Types</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">类型</h2>
 
       <h3 className="text-lg font-semibold mt-8 mb-4">UIElement</h3>
       <Code lang="typescript">{`interface UIElement {

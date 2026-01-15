@@ -7,14 +7,14 @@ import { CopyButton } from "@/components/copy-button";
 export default function Home() {
   return (
     <>
-      {/* Hero */}
+      {/* 主视觉区 */}
       <section className="max-w-5xl mx-auto px-6 pt-24 pb-16 text-center">
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter mb-6">
-          Predictable. Guardrailed. Fast.
+          可预测。有边界。高性能。
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-          Let users generate dashboards, widgets, apps, and data visualizations
-          from prompts — safely constrained to components you define.
+          让用户通过提示词生成仪表盘、小组件、应用和数据可视化 —
+          安全地限制在您定义的组件范围内。
         </p>
 
         <Demo />
@@ -28,7 +28,7 @@ export default function Home() {
 
         <div className="flex gap-3 justify-center mt-6">
           <Button size="lg" asChild>
-            <Link href="/docs">Get Started</Link>
+            <Link href="/docs">开始使用</Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
             <a
@@ -45,7 +45,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it works */}
+      {/* 工作原理 */}
       <section className="border-t border-border">
         <div className="max-w-5xl mx-auto px-6 py-24">
           <div className="grid md:grid-cols-3 gap-12">
@@ -53,48 +53,41 @@ export default function Home() {
               <div className="text-xs text-muted-foreground font-mono mb-3">
                 01
               </div>
-              <h3 className="text-lg font-semibold mb-2">
-                Define Your Catalog
-              </h3>
+              <h3 className="text-lg font-semibold mb-2">定义您的目录</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Set the guardrails. Define which components, actions, and data
-                bindings AI can use.
+                设定边界。定义 AI 可以使用的组件、操作和数据绑定。
               </p>
             </div>
             <div>
               <div className="text-xs text-muted-foreground font-mono mb-3">
                 02
               </div>
-              <h3 className="text-lg font-semibold mb-2">Users Prompt</h3>
+              <h3 className="text-lg font-semibold mb-2">用户提示</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                End users describe what they want. AI generates JSON constrained
-                to your catalog.
+                终端用户描述他们想要什么。AI 生成受限于您目录的 JSON。
               </p>
             </div>
             <div>
               <div className="text-xs text-muted-foreground font-mono mb-3">
                 03
               </div>
-              <h3 className="text-lg font-semibold mb-2">Render Instantly</h3>
+              <h3 className="text-lg font-semibold mb-2">即时渲染</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Stream the response. Your components render progressively as
-                JSON arrives.
+                流式传输响应。您的组件在 JSON 到达时渐进式渲染。
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Code example */}
+      {/* 代码示例 */}
       <section className="border-t border-border">
         <div className="max-w-5xl mx-auto px-6 py-24">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-2xl font-semibold mb-4">
-                Define your catalog
-              </h2>
+              <h2 className="text-2xl font-semibold mb-4">定义您的目录</h2>
               <p className="text-muted-foreground mb-6">
-                Components, actions, and validation functions.
+                组件、操作和验证函数。
               </p>
               <Code lang="typescript">{`import { createCatalog } from '@json-render/core';
 import { z } from 'zod';
@@ -122,15 +115,15 @@ export const catalog = createCatalog({
 });`}</Code>
             </div>
             <div>
-              <h2 className="text-2xl font-semibold mb-4">AI generates JSON</h2>
+              <h2 className="text-2xl font-semibold mb-4">AI 生成 JSON</h2>
               <p className="text-muted-foreground mb-6">
-                Constrained output that your components render natively.
+                受限的输出，您的组件可以原生渲染。
               </p>
               <Code lang="json">{`{
   "key": "dashboard",
   "type": "Card",
   "props": {
-    "title": "Revenue Dashboard",
+    "title": "收入仪表盘",
     "description": null
   },
   "children": [
@@ -138,7 +131,7 @@ export const catalog = createCatalog({
       "key": "revenue",
       "type": "Metric",
       "props": {
-        "label": "Total Revenue",
+        "label": "总收入",
         "valuePath": "/metrics/revenue",
         "format": "currency"
       }
@@ -150,35 +143,35 @@ export const catalog = createCatalog({
         </div>
       </section>
 
-      {/* Features */}
+      {/* 功能特性 */}
       <section className="border-t border-border">
         <div className="max-w-5xl mx-auto px-6 py-24">
-          <h2 className="text-2xl font-semibold mb-12 text-center">Features</h2>
+          <h2 className="text-2xl font-semibold mb-12 text-center">功能特性</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                title: "Guardrails",
-                desc: "AI can only use components you define in the catalog",
+                title: "边界控制",
+                desc: "AI 只能使用您在目录中定义的组件",
               },
               {
-                title: "Streaming",
-                desc: "Progressive rendering as JSON streams from the model",
+                title: "流式传输",
+                desc: "在 JSON 从模型流出时渐进式渲染",
               },
               {
-                title: "Data Binding",
-                desc: "Two-way binding with JSON Pointer paths",
+                title: "数据绑定",
+                desc: "使用 JSON Pointer 路径的双向绑定",
               },
               {
-                title: "Actions",
-                desc: "Named actions handled by your application",
+                title: "操作",
+                desc: "由您的应用程序处理的命名操作",
               },
               {
-                title: "Visibility",
-                desc: "Conditional show/hide based on data or auth",
+                title: "可见性",
+                desc: "基于数据或认证状态的条件显示/隐藏",
               },
               {
-                title: "Validation",
-                desc: "Built-in and custom validation functions",
+                title: "验证",
+                desc: "内置和自定义验证函数",
               },
             ].map((feature) => (
               <div key={feature.title}>
@@ -190,10 +183,10 @@ export const catalog = createCatalog({
         </div>
       </section>
 
-      {/* CTA */}
+      {/* 行动召唤 */}
       <section className="border-t border-border">
         <div className="max-w-4xl mx-auto px-6 py-24 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Get started</h2>
+          <h2 className="text-2xl font-semibold mb-4">开始使用</h2>
           <div className="flex items-center justify-center gap-2 border border-border rounded px-4 py-3 mb-8 mx-auto w-fit">
             <code className="text-sm bg-transparent">
               npm install @json-render/core @json-render/react
@@ -202,7 +195,7 @@ export const catalog = createCatalog({
           </div>
           <div>
             <Button asChild>
-              <Link href="/docs">Documentation</Link>
+              <Link href="/docs">查看文档</Link>
             </Button>
           </div>
         </div>

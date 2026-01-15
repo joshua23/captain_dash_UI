@@ -9,7 +9,7 @@ export default function ReactApiPage() {
     <article>
       <h1 className="text-3xl font-bold mb-4">@json-render/react</h1>
       <p className="text-muted-foreground mb-8">
-        React components, providers, and hooks.
+        React 组件、providers 和 hooks。
       </p>
 
       <h2 className="text-xl font-semibold mt-12 mb-4">Providers</h2>
@@ -43,7 +43,7 @@ interface AuthState {
 
 type ValidatorFn = (value: unknown, args?: object) => boolean | Promise<boolean>;`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Components</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">组件</h2>
 
       <h3 className="text-lg font-semibold mt-8 mb-4">Renderer</h3>
       <Code lang="tsx">{`<Renderer
@@ -63,8 +63,8 @@ interface ComponentProps {
 
       <h3 className="text-lg font-semibold mt-8 mb-4">useUIStream</h3>
       <Code lang="typescript">{`const {
-  tree,       // UITree - current UI state
-  isLoading,  // boolean - true while streaming
+  tree,       // UITree - 当前 UI 状态
+  isLoading,  // boolean - 流式传输时为 true
   error,      // Error | null
   generate,   // (prompt: string) => void
   abort,      // () => void

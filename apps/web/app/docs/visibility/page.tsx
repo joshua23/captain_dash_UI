@@ -2,20 +2,20 @@ import Link from "next/link";
 import { Code } from "@/components/code";
 
 export const metadata = {
-  title: "Visibility | json-render",
+  title: "可见性 | json-render",
 };
 
 export default function VisibilityPage() {
   return (
     <article>
-      <h1 className="text-3xl font-bold mb-4">Visibility</h1>
+      <h1 className="text-3xl font-bold mb-4">可见性</h1>
       <p className="text-muted-foreground mb-8">
-        Conditionally show or hide components based on data, auth, or logic.
+        根据数据、认证状态或逻辑条件显示或隐藏组件。
       </p>
 
       <h2 className="text-xl font-semibold mt-12 mb-4">VisibilityProvider</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Wrap your app with VisibilityProvider to enable conditional rendering:
+        用 VisibilityProvider 包装您的应用以启用条件渲染：
       </p>
       <Code lang="tsx">{`import { VisibilityProvider } from '@json-render/react';
 
@@ -23,44 +23,40 @@ function App() {
   return (
     <DataProvider initialData={data}>
       <VisibilityProvider>
-        {/* Components can now use visibility conditions */}
+        {/* 组件现在可以使用可见性条件 */}
       </VisibilityProvider>
     </DataProvider>
   );
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        Path-Based Visibility
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">基于路径的可见性</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Show/hide based on data values:
+        根据数据值显示/隐藏：
       </p>
       <Code lang="json">{`{
   "type": "Alert",
-  "props": { "message": "Form has errors" },
+  "props": { "message": "表单有错误" },
   "visible": { "path": "/form/hasErrors" }
 }
 
-// Visible when /form/hasErrors is truthy`}</Code>
+// 当 /form/hasErrors 为真值时可见`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">
-        Auth-Based Visibility
-      </h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">基于认证的可见性</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Show/hide based on authentication state:
+        根据认证状态显示/隐藏：
       </p>
       <Code lang="json">{`{
   "type": "AdminPanel",
   "visible": { "auth": "signedIn" }
 }
 
-// Options: "signedIn", "signedOut", "admin", etc.`}</Code>
+// 选项："signedIn"、"signedOut"、"admin" 等`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Logic Expressions</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">逻辑表达式</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Combine conditions with logic operators:
+        使用逻辑运算符组合条件：
       </p>
-      <Code lang="json">{`// AND - all conditions must be true
+      <Code lang="json">{`// AND - 所有条件必须为真
 {
   "type": "SubmitButton",
   "visible": {
@@ -71,7 +67,7 @@ function App() {
   }
 }
 
-// OR - any condition must be true
+// OR - 任一条件为真即可
 {
   "type": "HelpText",
   "visible": {
@@ -82,7 +78,7 @@ function App() {
   }
 }
 
-// NOT - invert a condition
+// NOT - 反转条件
 {
   "type": "WelcomeBanner",
   "visible": {
@@ -90,27 +86,27 @@ function App() {
   }
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Comparison Operators</h2>
-      <Code lang="json">{`// Equal
+      <h2 className="text-xl font-semibold mt-12 mb-4">比较运算符</h2>
+      <Code lang="json">{`// 等于
 {
   "visible": {
     "eq": [{ "path": "/user/role" }, "admin"]
   }
 }
 
-// Greater than
+// 大于
 {
   "visible": {
     "gt": [{ "path": "/cart/total" }, 100]
   }
 }
 
-// Available: eq, ne, gt, gte, lt, lte`}</Code>
+// 可用：eq、ne、gt、gte、lt、lte`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Complex Example</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">复杂示例</h2>
       <Code lang="json">{`{
   "type": "RefundButton",
-  "props": { "label": "Process Refund" },
+  "props": { "label": "处理退款" },
   "visible": {
     "and": [
       { "auth": "signedIn" },
@@ -121,26 +117,26 @@ function App() {
   }
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Using in Components</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">在组件中使用</h2>
       <Code lang="tsx">{`import { useIsVisible } from '@json-render/react';
 
 function ConditionalContent({ element, children }) {
   const isVisible = useIsVisible(element.visible);
-  
+
   if (!isVisible) return null;
   return <div>{children}</div>;
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Next</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">下一步</h2>
       <p className="text-sm text-muted-foreground">
-        Learn about{" "}
+        了解{" "}
         <Link
           href="/docs/validation"
           className="text-foreground hover:underline"
         >
-          form validation
+          表单验证
         </Link>
-        .
+        。
       </p>
     </article>
   );

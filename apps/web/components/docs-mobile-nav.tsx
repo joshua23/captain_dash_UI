@@ -13,33 +13,33 @@ import {
 
 const navigation = [
   {
-    title: "Getting Started",
+    title: "入门指南",
     items: [
-      { title: "Introduction", href: "/docs" },
-      { title: "Installation", href: "/docs/installation" },
-      { title: "Quick Start", href: "/docs/quick-start" },
+      { title: "介绍", href: "/docs" },
+      { title: "安装", href: "/docs/installation" },
+      { title: "快速开始", href: "/docs/quick-start" },
     ],
   },
   {
-    title: "Core Concepts",
+    title: "核心概念",
     items: [
-      { title: "Catalog", href: "/docs/catalog" },
-      { title: "Components", href: "/docs/components" },
-      { title: "Data Binding", href: "/docs/data-binding" },
-      { title: "Actions", href: "/docs/actions" },
-      { title: "Visibility", href: "/docs/visibility" },
-      { title: "Validation", href: "/docs/validation" },
+      { title: "目录", href: "/docs/catalog" },
+      { title: "组件", href: "/docs/components" },
+      { title: "数据绑定", href: "/docs/data-binding" },
+      { title: "操作", href: "/docs/actions" },
+      { title: "可见性", href: "/docs/visibility" },
+      { title: "验证", href: "/docs/validation" },
     ],
   },
   {
-    title: "Guides",
+    title: "指南",
     items: [
-      { title: "AI SDK Integration", href: "/docs/ai-sdk" },
-      { title: "Streaming", href: "/docs/streaming" },
+      { title: "AI SDK 集成", href: "/docs/ai-sdk" },
+      { title: "流式传输", href: "/docs/streaming" },
     ],
   },
   {
-    title: "API Reference",
+    title: "API 参考",
     items: [
       { title: "@json-render/core", href: "/docs/api/core" },
       { title: "@json-render/react", href: "/docs/api/react" },
@@ -68,7 +68,7 @@ export function DocsMobileNav() {
         </div>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto p-6">
-        <SheetTitle className="mb-6">Table of Contents</SheetTitle>
+        <SheetTitle className="mb-6">目录</SheetTitle>
         <nav className="space-y-6">
           {navigation.map((section) => (
             <div key={section.title}>

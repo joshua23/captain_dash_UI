@@ -2,20 +2,20 @@ import Link from "next/link";
 import { Code } from "@/components/code";
 
 export const metadata = {
-  title: "Components | json-render",
+  title: "组件 | json-render",
 };
 
 export default function ComponentsPage() {
   return (
     <article>
-      <h1 className="text-3xl font-bold mb-4">Components</h1>
+      <h1 className="text-3xl font-bold mb-4">组件</h1>
       <p className="text-muted-foreground mb-8">
-        Register React components to render your catalog types.
+        注册 React 组件来渲染您的目录类型。
       </p>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Component Registry</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">组件注册表</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Create a registry that maps catalog component types to React components:
+        创建一个注册表，将目录组件类型映射到 React 组件：
       </p>
       <Code lang="tsx">{`const registry = {
   Card: ({ element, children }) => (
@@ -27,7 +27,7 @@ export default function ComponentsPage() {
       {children}
     </div>
   ),
-  
+
   Button: ({ element, onAction }) => (
     <button onClick={() => onAction(element.props.action, {})}>
       {element.props.label}
@@ -35,9 +35,9 @@ export default function ComponentsPage() {
   ),
 };`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Component Props</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">组件属性</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Each component receives these props:
+        每个组件接收以下属性：
       </p>
       <Code lang="typescript">{`interface ComponentProps {
   element: {
@@ -48,20 +48,20 @@ export default function ComponentsPage() {
     visible?: VisibilityCondition;
     validation?: ValidationSchema;
   };
-  children?: React.ReactNode;  // Rendered children
+  children?: React.ReactNode;  // 已渲染的子元素
   onAction: (name: string, params: object) => void;
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Using Data Binding</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">使用数据绑定</h2>
       <p className="text-sm text-muted-foreground mb-4">
-        Use hooks to read and write data:
+        使用 hooks 来读取和写入数据：
       </p>
       <Code lang="tsx">{`import { useDataValue, useDataBinding } from '@json-render/react';
 
 const Metric = ({ element }) => {
-  // Read-only value
+  // 只读值
   const value = useDataValue(element.props.valuePath);
-  
+
   return (
     <div className="metric">
       <span className="label">{element.props.label}</span>
@@ -71,9 +71,9 @@ const Metric = ({ element }) => {
 };
 
 const TextField = ({ element }) => {
-  // Two-way binding
+  // 双向绑定
   const [value, setValue] = useDataBinding(element.props.valuePath);
-  
+
   return (
     <input
       value={value || ''}
@@ -83,7 +83,7 @@ const TextField = ({ element }) => {
   );
 };`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Using the Renderer</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">使用渲染器</h2>
       <Code lang="tsx">{`import { Renderer } from '@json-render/react';
 
 function App() {
@@ -95,16 +95,16 @@ function App() {
   );
 }`}</Code>
 
-      <h2 className="text-xl font-semibold mt-12 mb-4">Next</h2>
+      <h2 className="text-xl font-semibold mt-12 mb-4">下一步</h2>
       <p className="text-sm text-muted-foreground">
-        Learn about{" "}
+        了解{" "}
         <Link
           href="/docs/data-binding"
           className="text-foreground hover:underline"
         >
-          data binding
+          数据绑定
         </Link>{" "}
-        for dynamic values.
+        以获取动态值。
       </p>
     </article>
   );

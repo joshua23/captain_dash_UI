@@ -9,6 +9,7 @@ import {
 } from "@json-render/react";
 import { componentRegistry } from "@/components/ui";
 import { useDynamicUIStream } from "@/hooks/useDynamicUIStream";
+import { useEnvironment, Environment } from "@/hooks/useEnvironment";
 
 type DataSource = "tasks" | "users" | "subscriptions" | "notifications";
 
@@ -30,6 +31,16 @@ export default function DashboardPage() {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [dataVersion, setDataVersion] = useState(0); // 用于强制刷新 DataProvider
 
+  // 环境管理
+  const {
+    currentEnv,
+    environments,
+    isLoading: isEnvLoading,
+    setEnvironment,
+    testConnection,
+  } = useEnvironment();
+  const [isTestingConnection, setIsTestingConnection] = useState(false);
+
   const { tree, isStreaming, error, dataSource, send, clear } =
     useDynamicUIStream({
       api: "/api/generate",
@@ -39,15 +50,15 @@ export default function DashboardPage() {
       },
     });
 
-  // 当数据源变化时，获取对应数据
+  // 当数据源变化时，获取对应数据（包含环境参数）
   useEffect(() => {
     if (dataSource && dataSource !== currentSource) {
       setIsLoadingData(true);
 
-      fetch(`/api/data?source=${dataSource}`)
+      fetch(`/api/data?source=${dataSource}&env=${currentEnv}`)
         .then((res) => res.json())
         .then((newData) => {
-          console.log(`✅ 已加载 ${dataSource} 数据:`, newData);
+          console.log(`✅ 已加载 ${dataSource} 数据 (${currentEnv}):`, newData);
           setCurrentSource(dataSource);
           setData(newData);
           // 递增版本号强制 DataProvider 使用新数据重新挂载
@@ -60,15 +71,61 @@ export default function DashboardPage() {
           setIsLoadingData(false);
         });
     }
-  }, [dataSource, currentSource]);
+  }, [dataSource, currentSource, currentEnv]);
+
+  // 当环境切换时，重新加载当前数据源
+  useEffect(() => {
+    if (currentSource) {
+      setIsLoadingData(true);
+      fetch(`/api/data?source=${currentSource}&env=${currentEnv}`)
+        .then((res) => res.json())
+        .then((newData) => {
+          console.log(
+            `🔄 环境切换，重新加载 ${currentSource} (${currentEnv}):`,
+            newData,
+          );
+          setData(newData);
+          setDataVersion((v) => v + 1);
+        })
+        .catch((err) => {
+          console.error(`❌ 环境切换后加载数据失败:`, err);
+        })
+        .finally(() => {
+          setIsLoadingData(false);
+        });
+    }
+    // 只在 currentEnv 变化时触发，不包含 currentSource 避免重复请求
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentEnv]);
+
+  // 环境切换处理
+  const handleEnvChange = useCallback(
+    async (env: Environment) => {
+      if (env === currentEnv) return;
+
+      setIsTestingConnection(true);
+      const success = await testConnection(env);
+      setIsTestingConnection(false);
+
+      if (success) {
+        setEnvironment(env);
+      } else {
+        alert(`无法连接到 ${env === "production" ? "生产" : "测试"} 环境`);
+      }
+    },
+    [currentEnv, testConnection, setEnvironment],
+  );
 
   const ACTION_HANDLERS = {
     export_report: () => alert("正在导出报告..."),
     refresh_data: () => {
       if (currentSource) {
-        fetch(`/api/data?source=${currentSource}`)
+        fetch(`/api/data?source=${currentSource}&env=${currentEnv}`)
           .then((res) => res.json())
-          .then(setData);
+          .then((newData) => {
+            setData(newData);
+            setDataVersion((v) => v + 1);
+          });
       }
     },
     view_details: (params: Record<string, unknown>) =>
@@ -124,43 +181,101 @@ export default function DashboardPage() {
             style={{ maxWidth: 960, margin: "0 auto", padding: "48px 24px" }}
           >
             <header style={{ marginBottom: 48 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <h1
-                  style={{
-                    margin: 0,
-                    fontSize: 32,
-                    fontWeight: 600,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  智能仪表盘
-                </h1>
-                {currentSource && (
-                  <span
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <h1
                     style={{
-                      padding: "4px 12px",
-                      background: "#3b82f620",
-                      borderRadius: "var(--radius)",
-                      fontSize: 13,
-                      color: "#3b82f6",
+                      margin: 0,
+                      fontSize: 32,
+                      fontWeight: 600,
+                      letterSpacing: "-0.02em",
                     }}
                   >
-                    {DATA_SOURCE_LABELS[currentSource]}
+                    智能仪表盘
+                  </h1>
+                  {currentSource && (
+                    <span
+                      style={{
+                        padding: "4px 12px",
+                        background: "#3b82f620",
+                        borderRadius: "var(--radius)",
+                        fontSize: 13,
+                        color: "#3b82f6",
+                      }}
+                    >
+                      {DATA_SOURCE_LABELS[currentSource]}
+                    </span>
+                  )}
+                  {(isLoadingData || isTestingConnection) && (
+                    <span
+                      style={{
+                        padding: "4px 8px",
+                        background: "var(--border)",
+                        borderRadius: "var(--radius)",
+                        fontSize: 12,
+                        color: "var(--muted)",
+                      }}
+                    >
+                      {isTestingConnection ? "测试连接中..." : "加载数据中..."}
+                    </span>
+                  )}
+                </div>
+
+                {/* 环境选择器 */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 13, color: "var(--muted)" }}>
+                    环境:
                   </span>
-                )}
-                {isLoadingData && (
-                  <span
-                    style={{
-                      padding: "4px 8px",
-                      background: "var(--border)",
-                      borderRadius: "var(--radius)",
-                      fontSize: 12,
-                      color: "var(--muted)",
-                    }}
+                  <div
+                    style={{ position: "relative", display: "flex", gap: 4 }}
                   >
-                    加载数据中...
-                  </span>
-                )}
+                    {!isEnvLoading &&
+                      environments.map((env) => (
+                        <button
+                          key={env.id}
+                          onClick={() => handleEnvChange(env.id)}
+                          disabled={!env.configured || isTestingConnection}
+                          title={env.configured ? env.description : "未配置"}
+                          style={{
+                            padding: "6px 12px",
+                            background:
+                              currentEnv === env.id
+                                ? env.id === "production"
+                                  ? "#ef444420"
+                                  : "#22c55e20"
+                                : "var(--card)",
+                            color:
+                              currentEnv === env.id
+                                ? env.id === "production"
+                                  ? "#ef4444"
+                                  : "#22c55e"
+                                : "var(--muted)",
+                            border: `1px solid ${
+                              currentEnv === env.id
+                                ? env.id === "production"
+                                  ? "#ef444440"
+                                  : "#22c55e40"
+                                : "var(--border)"
+                            }`,
+                            borderRadius: "var(--radius)",
+                            fontSize: 13,
+                            fontWeight: currentEnv === env.id ? 500 : 400,
+                            cursor: env.configured ? "pointer" : "not-allowed",
+                            opacity: env.configured ? 1 : 0.5,
+                            transition: "all 0.15s ease",
+                          }}
+                        >
+                          {env.id === "production" ? "🔴 生产" : "🟢 测试"}
+                        </button>
+                      ))}
+                  </div>
+                </div>
               </div>
               <p
                 style={{
@@ -338,24 +453,48 @@ export default function DashboardPage() {
                     gap: 8,
                   }}
                 >
-                  <div>
-                    <strong style={{ fontSize: 12, color: "var(--muted)" }}>
-                      数据源:
-                    </strong>
-                    <pre
-                      style={{
-                        marginTop: 4,
-                        padding: 12,
-                        background: "var(--card)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "var(--radius)",
-                        overflow: "auto",
-                        fontSize: 11,
-                        color: "var(--muted)",
-                      }}
-                    >
-                      {currentSource || "未选择"}
-                    </pre>
+                  <div style={{ display: "flex", gap: 16 }}>
+                    <div>
+                      <strong style={{ fontSize: 12, color: "var(--muted)" }}>
+                        当前环境:
+                      </strong>
+                      <pre
+                        style={{
+                          marginTop: 4,
+                          padding: 12,
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "var(--radius)",
+                          overflow: "auto",
+                          fontSize: 11,
+                          color:
+                            currentEnv === "production" ? "#ef4444" : "#22c55e",
+                        }}
+                      >
+                        {currentEnv === "production"
+                          ? "🔴 生产环境"
+                          : "🟢 测试环境"}
+                      </pre>
+                    </div>
+                    <div>
+                      <strong style={{ fontSize: 12, color: "var(--muted)" }}>
+                        数据源:
+                      </strong>
+                      <pre
+                        style={{
+                          marginTop: 4,
+                          padding: 12,
+                          background: "var(--card)",
+                          border: "1px solid var(--border)",
+                          borderRadius: "var(--radius)",
+                          overflow: "auto",
+                          fontSize: 11,
+                          color: "var(--muted)",
+                        }}
+                      >
+                        {currentSource || "未选择"}
+                      </pre>
+                    </div>
                   </div>
                   <div>
                     <strong style={{ fontSize: 12, color: "var(--muted)" }}>

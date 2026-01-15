@@ -1,10 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
+import { Environment } from "@/lib/env-config";
+import { getSupabaseClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 // 数据源配置
 type DataSource = "tasks" | "users" | "subscriptions" | "notifications";
@@ -12,24 +11,40 @@ type DataSource = "tasks" | "users" | "subscriptions" | "notifications";
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const source = (searchParams.get("source") || "tasks") as DataSource;
+  const env = searchParams.get("env") as Environment | null;
 
-  const supabase = createClient(supabaseUrl, supabaseKey);
+  // 使用环境感知的 Supabase 客户端
+  const supabase = env ? getSupabaseClient(env) : getSupabaseClient();
 
   try {
+    let data;
     switch (source) {
       case "tasks":
-        return Response.json(await getTasksData(supabase));
+        data = await getTasksData(supabase);
+        break;
       case "users":
-        return Response.json(await getUsersData(supabase));
+        data = await getUsersData(supabase);
+        break;
       case "subscriptions":
-        return Response.json(await getSubscriptionsData(supabase));
+        data = await getSubscriptionsData(supabase);
+        break;
       case "notifications":
-        return Response.json(await getNotificationsData(supabase));
+        data = await getNotificationsData(supabase);
+        break;
       default:
         return Response.json({ error: "未知数据源" }, { status: 400 });
     }
+
+    // 添加环境信息到响应
+    return Response.json({
+      ...data,
+      _meta: {
+        environment: env || "test",
+        timestamp: new Date().toISOString(),
+      },
+    });
   } catch (error) {
-    console.error(`获取 ${source} 数据失败:`, error);
+    console.error(`获取 ${source} 数据失败 (env: ${env || "default"}):`, error);
     return Response.json(
       { error: error instanceof Error ? error.message : "未知错误" },
       { status: 500 },

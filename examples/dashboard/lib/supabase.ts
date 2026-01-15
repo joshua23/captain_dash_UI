@@ -1,9 +1,61 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import {
+  Environment,
+  getEnvironmentConfig,
+  getDefaultEnvironment,
+  isEnvironmentConfigured,
+} from "./env-config";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// 缓存不同环境的 Supabase 客户端（单例模式）
+const clientCache = new Map<Environment, SupabaseClient>();
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+/**
+ * 获取指定环境的 Supabase 客户端
+ * 使用单例模式，避免重复创建客户端
+ */
+export function getSupabaseClient(env?: Environment): SupabaseClient {
+  const targetEnv = env || (getDefaultEnvironment().id as Environment);
+
+  // 检查缓存
+  if (clientCache.has(targetEnv)) {
+    return clientCache.get(targetEnv)!;
+  }
+
+  // 获取环境配置
+  const config = getEnvironmentConfig(targetEnv);
+  if (!config || !config.supabase.url || !config.supabase.anonKey) {
+    throw new Error(`环境 "${targetEnv}" 未配置或配置无效`);
+  }
+
+  // 创建客户端
+  const client = createClient(config.supabase.url, config.supabase.anonKey);
+
+  // 缓存客户端
+  clientCache.set(targetEnv, client);
+
+  return client;
+}
+
+/**
+ * 清除指定环境的客户端缓存（用于重新连接）
+ */
+export function clearClientCache(env?: Environment): void {
+  if (env) {
+    clientCache.delete(env);
+  } else {
+    clientCache.clear();
+  }
+}
+
+/**
+ * 检查指定环境是否可用
+ */
+export function isEnvironmentAvailable(env: Environment): boolean {
+  return isEnvironmentConfigured(env);
+}
+
+// 导出默认客户端（向后兼容）
+export const supabase = getSupabaseClient();
 
 // 数据库类型定义
 export interface AnalyticsMetrics {
@@ -32,10 +84,12 @@ export interface Transaction {
   created_at: string;
 }
 
-// 获取仪表盘数据的函数
-export async function getDashboardData() {
+// 获取仪表盘数据的函数（支持环境参数）
+export async function getDashboardData(env?: Environment) {
+  const client = getSupabaseClient(env);
+
   // 获取分析指标
-  const { data: metrics, error: metricsError } = await supabase
+  const { data: metrics, error: metricsError } = await client
     .from("analytics_metrics")
     .select("*")
     .order("created_at", { ascending: false })
@@ -47,7 +101,7 @@ export async function getDashboardData() {
   }
 
   // 获取区域销售数据
-  const { data: salesByRegion, error: salesError } = await supabase
+  const { data: salesByRegion, error: salesError } = await client
     .from("sales_by_region")
     .select("*")
     .order("value", { ascending: false });
@@ -57,7 +111,7 @@ export async function getDashboardData() {
   }
 
   // 获取最近交易
-  const { data: transactions, error: transactionsError } = await supabase
+  const { data: transactions, error: transactionsError } = await client
     .from("transactions")
     .select("*")
     .order("date", { ascending: false })
@@ -92,74 +146,4 @@ export async function getDashboardData() {
       region: "",
     },
   };
-}
-
-// 插入初始数据（如果表为空）
-export async function seedInitialData() {
-  // 检查是否已有数据
-  const { count } = await supabase
-    .from("analytics_metrics")
-    .select("*", { count: "exact", head: true });
-
-  if (count && count > 0) {
-    console.log("数据库已有数据，跳过初始化");
-    return;
-  }
-
-  // 插入指标数据
-  await supabase.from("analytics_metrics").insert({
-    revenue: 125000,
-    growth: 0.15,
-    customers: 1234,
-    orders: 567,
-  });
-
-  // 插入区域销售数据
-  await supabase.from("sales_by_region").insert([
-    { label: "美国", value: 45000 },
-    { label: "欧洲", value: 35000 },
-    { label: "亚洲", value: 28000 },
-    { label: "其他", value: 17000 },
-  ]);
-
-  // 插入交易数据
-  await supabase.from("transactions").insert([
-    {
-      id: "TXN001",
-      customer: "艾科公司",
-      amount: 1500,
-      status: "已完成",
-      date: "2024-01-15",
-    },
-    {
-      id: "TXN002",
-      customer: "博达集团",
-      amount: 2300,
-      status: "已完成",
-      date: "2024-01-14",
-    },
-    {
-      id: "TXN003",
-      customer: "创新科技",
-      amount: 890,
-      status: "待处理",
-      date: "2024-01-14",
-    },
-    {
-      id: "TXN004",
-      customer: "德信企业",
-      amount: 3200,
-      status: "已完成",
-      date: "2024-01-13",
-    },
-    {
-      id: "TXN005",
-      customer: "恩华实业",
-      amount: 1100,
-      status: "已退款",
-      date: "2024-01-12",
-    },
-  ]);
-
-  console.log("初始数据已插入");
 }
